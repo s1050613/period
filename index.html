@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>My Timetable | Period</title>
+		<meta charset="UTF-8">
+		
+		<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Raleway" type="text/css"/>
+		
+		<link rel="stylesheet" href="styles/main.css" type="text/css"/>
+		<script src="scripts/main.js"></script>
+		<script src="scripts/rowsej.js"></script>
+	</head>
+	<body>
+		<h1 id="titleEl">My Timetable</h1>
+		<div class="settings">
+			<input type="checkbox" onchange="showPeriodList=!showPeriodList;update();" checked/>
+			<input type="checkbox" onchange="showTeachers=!showTeachers;update();" checked/>
+			<input type="checkbox" onchange="showTimes=!showTimes;update();"/>
+			<button onclick="newData();">Enter data</button>
+		</div>
+		<div class="timetable"></div>
+	</body>
+</html>

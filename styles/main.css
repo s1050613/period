@@ -1,0 +1,58 @@
+/**{border:1px solid black;}*/
+body {
+	font-family: "Raleway", Arial;
+	position: relative;
+}
+h1 {
+	text-align: center;
+}
+
+.timetable {
+	margin: auto;
+	
+	width: 80vw;
+	height: 80vh;
+	
+	display: grid;
+	grid-template-columns: 1fr repeat(5, 2fr);
+}
+.box {
+	padding: 10px;
+	box-sizing: border-box;
+	
+	background: lightgrey;
+	height: 100px;
+	
+	overflow: auto;
+	
+	border: 3px solid grey;
+	border-radius: 10px;
+	box-shadow: 0px 0px 6px grey;
+}
+.box:first-child {
+	height: 50px;
+	font-weight: bold;
+}
+.box.break {
+	height: 60px;
+}
+.box[data-span="2"] {
+	height: 200px;
+}
+.box[data-span="3"] {
+	height: 300px;
+}
+
+.settings {
+	margin: 15px;
+	text-align: center;
+	/*position: absolute;
+	bottom: 0;*/
+}
+
+.invisible {
+	opacity: 0;
+}
+.small {
+	font-size: 90%;
+}
