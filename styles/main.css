@@ -43,6 +43,10 @@ h1 {
 	height: 300px;
 }
 
+.current {
+	background: #FEF23E;
+}
+
 .settings {
 	margin: 15px;
 	text-align: center;
@@ -55,4 +59,7 @@ h1 {
 }
 .small {
 	font-size: 90%;
+}
+.hidden {
+	display: none !important;
 }
