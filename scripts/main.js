@@ -102,7 +102,7 @@ function resetTimetableElement() {
 	var periodListHTML = `
 		<div class="column period-list">
 			<div class="box invisible">HABST DU EINEN KUCHEN?!</div>
-			${periodList.map((p, i) => "<div class='box" + (p.type == "breaktime"? " break" : "") + ((getDay() >= 0 && getDay <= 5 && getSeconds() >= sfd(p.time[0]) && getSeconds() < sfd(p.time[1]))? " current" : "") + "'>" + p.display + (showTimes? ("<br/><span class='small'>" + p.time[0] + " - " + p.time[1] + "</span>") : "") + "</div>").join("")}
+			${periodList.map((p, i) => "<div class='box" + (p.type == "breaktime"? " break" : "") + ((getDay() >= 0 && getDay() <= 5 && getSeconds() >= sfd(p.time[0]) && getSeconds() < sfd(p.time[1]))? " current" : "") + "'>" + p.display + (showTimes? ("<br/><span class='small'>" + p.time[0] + " - " + p.time[1] + "</span>") : "") + "</div>").join("")}
 		</div>
 	`;
 	var aDay = `
