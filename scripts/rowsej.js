@@ -4,8 +4,11 @@ String.prototype.textBefore = function(text) {
 String.prototype.textAfter = function(text) {
 	return this.substr(this.indexOf(text) + text.length);
 };
-function setCookie(key, value, otherParameters) {
+/*function setCookie(key, value, otherParameters) {
 	document.cookie = key + "=" + value + ";" + (otherParameters || "");
+}*/
+function setCookie(key, value) {
+	document.cookie = key + "=" + value + ";max-age=604800;";
 }
 function getCookie(key) {
 	var toReturn;
