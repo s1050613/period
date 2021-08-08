@@ -1,7 +1,6 @@
 var cols = ["#FF9AA2", "#FFB7B2", "#FFDAC1", "#E2F0CB", "#B5EAD7", "#C7CEEA", "#FFB5E8", "#85E3FF", "#D5AAFF", "#FFF5BA"];
 var borderCols = ["#DD7880", "#DD9590", "#DDB8A0", "#C0D0A9", "#93C8B5", "#A5ACC8", "#DD83C6", "#63A1DD", "#B388DD", "#DDD398"];
-var times = ["8:45 - 9:35", "9:35 - 10:25", "10:25 - 10:45", "10:45 - 11:35", "11:35 - 12:25", "12:25 - 1:15", "1:15 - 2:05", "2:05 - 2:55", "2:55 - 3:45"];
-var periodList = [{ type: "period", display: "Period 1" }, { type: "period", display: "Period 2" }, { type: "breaktime", display: "Recess" }, { type: "period", display: "Period 3" }, { type: "period", display: "Period 4" }, { type: "period", display: "Period 5" }, { type: "breaktime", display: "Lunchtime" }, { type: "period", display: "Period 7" }, { type: "period", display: "Period 8" }];
+var periodList = [{ type: "period", display: "Period 1", time: ["8:45", "9:35"] }, { type: "period", display: "Period 2", time: ["9:35", "10:25"] }, { type: "breaktime", display: "Recess", time: ["10:25", "10:45"] }, { type: "period", display: "Period 3", time: ["10:45", "11:35"] }, { type: "period", display: "Period 4", time: ["11:35", "12:25"] }, { type: "period", display: "Period 5", time: ["12:25", "13:15"] }, { type: "breaktime", display: "Lunchtime", time: ["13:15", "14:05"] }, { type: "period", display: "Period 7", time: ["14:05", "14:55"] }, { type: "period", display: "Period 8", time: ["14:55", "15:45"] }];
 
 var subs, teachers, cols, borderCols, times, timetable;
 
@@ -50,7 +49,39 @@ window.onload = () => {
 		titleEl.innerText = newTitle;
 		document.title = `${newTitle} | Period`;
 	};
+	
+	askForNotifications();
+	
+	/*setTimeout(function() {
+		sendNotification("English in 5 minutes!", {
+			body: "In 5 minutes, you will have English!",
+			icon: "uploads/clock.jpg",
+			tag: "reminder",
+			actions: [
+				{
+					action: "zoom_join",
+					title: "Join Zoom",
+					icon: "uploads/zoom.jpg"
+				}
+			]
+		});
+	}, 5000);*/
+	
+	loop();
 };
+
+function loop() {
+	update();
+	
+	/*var currentPeriod = -1;
+	periodList.forEach((p, i) => {
+		if(getSeconds() >= sfd(p.time[0]) && getSeconds() < sfd(p.time[1])) {
+			currentPeriod = i;
+		}
+	});*/
+	
+	window.requestAnimationFrame(loop);
+}
 
 function resetTimetableElement() {
 	// The main HTML bit
@@ -71,7 +102,7 @@ function resetTimetableElement() {
 	var periodListHTML = `
 		<div class="column period-list">
 			<div class="box invisible">HABST DU EINEN KUCHEN?!</div>
-			${periodList.map((p, i) => "<div class='box" + (p.type == "breaktime"? " break" : "") + "'>" + p.display + (showTimes? ("<br/><span class='small'>" + times[i] + "</span>") : "") + "</div>").join("")}
+			${periodList.map((p, i) => "<div class='box" + (p.type == "breaktime"? " break" : "") + ((getDay() >= 0 && getDay <= 5 && getSeconds() >= sfd(p.time[0]) && getSeconds() < sfd(p.time[1]))? " current" : "") + "'>" + p.display + (showTimes? ("<br/><span class='small'>" + p.time[0] + " - " + p.time[1] + "</span>") : "") + "</div>").join("")}
 		</div>
 	`;
 	var aDay = `
@@ -94,7 +125,7 @@ function resetTimetableElement() {
 		}
 		timetableEl.innerHTML += `
 			<div class="column">
-				<div class="box" onclick="showTeachers=!showTeachers;update();">${dayName}</div>
+				<div class="box${day == getDay()? " current" : ""}" onclick="showTeachers=!showTeachers;update();">${dayName}</div>
 				${aDay}
 			</div>
 		`;
@@ -163,9 +194,33 @@ function update() {
 	renderTimetable();
 }
 
+function getDay() {
+	return (new Date()).getDay() - 1;
+}
+function getSeconds() {
+	var d = new Date();
+	return d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
+}
+function sfd(d) {
+	var a = d.split(":");
+	return a[0] * 3600 + a[1] * 60;
+}
 function newData() {
 	var n = prompt("Enter data:");
 	setCookie("data", getCookie("data") + "|" + n);
 	eval(atob(n));
 	update();
+}
+
+function askForNotifications() {
+	if(window.Notification) {
+		Notification.requestPermission().then(res => {
+			alert(["Notifications have been blocked!", "Notifications have been allowed!"][+(res == "granted")]);
+		});
+	}
+}
+function sendNotification(title, data) {
+	if(window.Notification && Notification.permission == "granted") {
+		var note = new Notification(title, data);
+	}
 }
