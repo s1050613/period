@@ -1,6 +1,6 @@
 var cols = ["#FF9AA2", "#FFB7B2", "#FFDAC1", "#E2F0CB", "#B5EAD7", "#C7CEEA", "#FFB5E8", "#85E3FF", "#D5AAFF", "#FFF5BA"];
 var borderCols = ["#DD7880", "#DD9590", "#DDB8A0", "#C0D0A9", "#93C8B5", "#A5ACC8", "#DD83C6", "#63A1DD", "#B388DD", "#DDD398"];
-var periodList = [{ type: "period", display: "Period 1", time: ["8:45", "9:35"] }, { type: "period", display: "Period 2", time: ["9:35", "10:25"] }, { type: "breaktime", display: "Recess", time: ["10:25", "10:45"] }, { type: "period", display: "Period 3", time: ["10:45", "11:35"] }, { type: "period", display: "Period 4", time: ["11:35", "12:25"] }, { type: "period", display: "Period 5", time: ["12:25", "13:15"] }, { type: "breaktime", display: "Lunchtime", time: ["13:15", "14:05"] }, { type: "period", display: "Period 7", time: ["14:05", "14:55"] }, { type: "period", display: "Period 8", time: ["14:55", "15:45"] }];
+var periodList = [{ type: "period", display: "Period 1", time: ["8:40", "9:25"] }, { type: "period", display: "Period 2", time: ["9:30", "10:15"] }, { type: "breaktime", display: "Recess", time: ["10:15", "10:35"] }, { type: "period", display: "Period 3", time: ["10:35", "11:20"] }, { type: "period", display: "Period 4", time: ["11:25", "12:10"] }, { type: "period", display: "Period 5", time: ["12:15", "13:00"] }, { type: "breaktime", display: "Lunchtime", time: ["13:00", "14:00"] }, { type: "period", display: "Period 7", time: ["14:00", "14:45"] }, { type: "period", display: "Period 8", time: ["14:50", "15:35"] }];
 
 var subs, teachers, cols, borderCols, times, timetable;
 
@@ -10,35 +10,12 @@ var showTeachers = true;
 var showTimes = false;
 
 var titleEl;
+var settingsEl, settingsTab;
 
-window.onload = () => {
+window.onload = async() => {
 	/*removeCookie("data-exists");
 	removeCookie("data");
-	removeCookie("subs");
-	removeCookie("teachers");
-	removeCookie("cols");
-	removeCookie("borderCols");
-	removeCookie("times");
-	removeCookie("timetable");*/
-	
-	if(getCookie("data-exists")) {
-		getCookie("data").split("|").forEach(d => {
-			console.log(atob(d));
-			eval(atob(d));
-		});
-	} else {
-		var data = prompt("Enter timetable data:");
-		atob(data).split("|").forEach(d => {
-			eval(d);
-		});
-		//eval(atob(data));
-		
-		setCookie("data", data);
-		
-		setCookie("data-exists", 1);
-	}
-	
-	update();
+	removeCookie("title");*/
 	
 	titleEl = selectEl("#titleEl");
 	titleEl.onclick = () => {
@@ -48,12 +25,58 @@ window.onload = () => {
 		}
 		titleEl.innerText = newTitle;
 		document.title = `${newTitle} | Period`;
+		setCookie("title", newTitle);
+	};
+	
+	if(getCookie("data-exists")) {
+		getCookie("data").split("|").forEach(d => {
+			console.log(atob(d));
+			eval(atob(d));
+		});
+		var title = getCookie("title");
+		titleEl.innerHTML = title;
+		document.title = `${title} | Period`;
+	} else {
+		var { value: data } = await (swal || {
+			fire: function(stuffs) {
+				return {
+					value: prompt(`${stuffs.title}\n\n${stuffs.html}`)
+				};
+			}
+		}).fire({
+			title: "Welcome to Period!",
+			html: "Period is the ultimate school timetable, designed for the student, by the student.<br/><br/>Start by entering your timetable data:",
+			input: "text",
+			inputValidator: value => {
+				if(!value) {
+					return "Please enter something!";
+				}
+			},
+			icon: "success"
+		});
+		atob(data).split("|").forEach(d => {
+			eval(d);
+		});
+		//eval(atob(data));
+		
+		setCookie("data", data);
+		setCookie("title", "My Timetable");
+		
+		setCookie("data-exists", 1);
+	}
+	
+	update();
+	
+	settingsEl = selectEl("#settings");
+	settingsTab = selectEl("#settingsTab");
+	settingsTab.onclick = () => {
+		settingsEl.classList.toggle("open");
 	};
 	
 	askForNotifications();
 	
-	/*setTimeout(function() {
-		sendNotification("English in 5 minutes!", {
+	setTimeout(function() {
+		sendNotification("(IGNORE--TEST NOTIFICATION) English in 5 minutes!", {
 			body: "In 5 minutes, you will have English!",
 			icon: "uploads/clock.jpg",
 			tag: "reminder",
@@ -65,20 +88,21 @@ window.onload = () => {
 				}
 			]
 		});
-	}, 5000);*/
+	}, 5000);
 	
 	loop();
 };
 
 function loop() {
-	update();
+	//update();
 	
-	/*var currentPeriod = -1;
+	var currentPeriod = -1;
 	periodList.forEach((p, i) => {
-		if(getSeconds() >= sfd(p.time[0]) && getSeconds() < sfd(p.time[1])) {
+		//if(getSeconds() >= sfd(p.time[0]) && getSeconds() < sfd(p.time[1])) {
 			currentPeriod = i;
-		}
-	});*/
+		//}
+	});
+	//if()
 	
 	window.requestAnimationFrame(loop);
 }
@@ -207,6 +231,9 @@ function sfd(d) {
 }
 function newData() {
 	var n = prompt("Enter data:");
+	if(!n) {
+		return;
+	}
 	setCookie("data", getCookie("data") + "|" + n);
 	eval(atob(n));
 	update();
