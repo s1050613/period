@@ -8,7 +8,7 @@ String.prototype.textAfter = function(text) {
 	document.cookie = key + "=" + value + ";" + (otherParameters || "");
 }*/
 function setCookie(key, value) {
-	document.cookie = key + "=" + value + ";max-age=604800;";
+	document.cookie = key + "=" + value + ";"; //";max-age=604800;";
 }
 function getCookie(key) {
 	var toReturn;
