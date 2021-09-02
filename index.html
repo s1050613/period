@@ -5,20 +5,33 @@
 		<meta charset="UTF-8">
 		
 		<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Raleway" type="text/css"/>
+		<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		
 		<link rel="stylesheet" href="styles/main.css" type="text/css"/>
 		<script src="scripts/main.js"></script>
 		<script src="scripts/rowsej.js"></script>
 	</head>
 	<body>
-		<h1 id="titleEl">My Timetable</h1>
-		<div class="settings">
-			<input type="checkbox" onchange="showPeriodList=!showPeriodList;update();" checked/>
-			<input type="checkbox" onchange="showTeachers=!showTeachers;update();" checked/>
-			<input type="checkbox" onchange="showTimes=!showTimes;update();"/>
-			<button onclick="newData();">Enter data</button>
+		<div id="timetableCont" class="container">
+			<h1 id="titleEl">My Timetable</h1>
+			<div class="anotherContainer">
+				<div id="settings">
+					<div id="settingsTab">Settings</div>
+					<label for="input_checkbox1">Show period list</label>
+					<input type="checkbox" id="input_checkbox1" onchange="showPeriodList=!showPeriodList;update();" checked/>
+					<br/>
+					<label for="input_checkbox2">Show teachers</label>
+					<input type="checkbox" id="<input_checkbox2></input_checkbox2>" onchange="showTeachers=!showTeachers;update();" checked/>
+					<br/>
+					<label for="input_checkbox3">Show period times</label>
+					<input type="checkbox" id="input_checkbox3" onchange="showTimes=!showTimes;update();"/>
+					<br/>
+					<button onclick="newData();">Enter data</button>
+					<button onclick="removeCookie('data-exists');location.reload();">Reset</button>
+				</div>
+				<div class="timetable"></div>
+			</div>
 		</div>
-		<div class="timetable"></div>
 		
 		<div class="hidden">
 			<div>Icons made by <a href="https://www.flaticon.com/authors/lyolya" title="Lyolya">Lyolya</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
